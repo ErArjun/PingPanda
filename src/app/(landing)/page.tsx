@@ -1,7 +1,10 @@
+import { DiscordMessage } from "@/components/discord-message"
+import { Heading } from "@/components/heading"
+import { MaxWidthWrapper } from "@/components/max-width-wrapper"
+import { MockDiscordUI } from "@/components/mock-discord-ui"
+import { ShinyButton } from "@/components/shiny-button"
+import { AnimatedList } from "@/components/ui/animated-list"
 import { Check } from "lucide-react"
-import { Heading } from "./components/heading"
-import { MaxWidthWrapper } from "./components/max-width-wrapper"
-import { ShinyButton } from "./components/shiny-button"
 
 const Page = () => {
   return (
@@ -48,7 +51,46 @@ const Page = () => {
           </div>
         </MaxWidthWrapper>
       </section>
-      <section></section>
+      <section className="relative bg-brand-25 pb-24">
+        <div className="absolute inset-x-0 bottom-24 top-24 bg-brand-700" />
+        <div className="relative mx-auto">
+          <MaxWidthWrapper className="relative">
+            <div className="-m-2 rounded-xl bg-gray-900/5 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl">
+              <MockDiscordUI>
+                <AnimatedList>
+                  <DiscordMessage
+                    avatarSrc="/brand-asset-profile-picture.png"
+                    avatarAlt="PingPanda Avatar"
+                    username="PingPanda"
+                    timestamp="Today at 10:30AM"
+                    badgeText="SignUp"
+                    badgeColor="#43b581"
+                    title="👤 New User signed up"
+                    content={{
+                      name: "Hari Nepali",
+                      email: "Iamhari9@gmail.com",
+                    }}
+                  />
+                  <DiscordMessage
+                    avatarSrc="/brand-asset-profile-picture.png"
+                    avatarAlt="PingPanda Avatar"
+                    username="PingPanda"
+                    timestamp="Today at 10:30AM"
+                    badgeText="Revenue"
+                    badgeColor="#faa61a"
+                    title="💰 Payment Received"
+                    content={{
+                      amount: "Rs1000",
+                      email: "sitaPandey78@gmail.com",
+                      plan: "PRO",
+                    }}
+                  />
+                </AnimatedList>
+              </MockDiscordUI>
+            </div>
+          </MaxWidthWrapper>
+        </div>
+      </section>
       <section></section>
       <section></section>
     </>
