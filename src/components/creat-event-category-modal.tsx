@@ -1,9 +1,10 @@
 "use client"
 
+import { client } from "@/lib/client"
 import { cn } from "@/lib/utils"
 import { CATEGORY_NAME_VALIDATOR } from "@/lib/validators/category-validator"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { PropsWithChildren, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -48,12 +49,32 @@ const EMOJI_OPTIONS = [
   { emoji: "💡", label: "Idea" },
   { emoji: "🔔", label: "Notification" },
 ]
-export const CreateEventCategoryModal = ({ children }: PropsWithChildren) => {
+
+interface CreateEventCategoryModalProps extends PropsWithChildren {
+  containerClassName?: string
+}
+export const CreateEventCategoryModal = ({
+  children,
+  containerClassName,
+}: CreateEventCategoryModalProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
 
+  const { mutate: createEventCategory, isPending: createCategoryPending } =
+    useMutation({
+      mutationFn: async (data: EventCategoryForm) => {
+        await client.category.createEventCategory.$post(data)
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["user-event-categories"] })
+        setIsOpen(false)
+        reset()
+      },
+    })
+
   const {
     register,
+    reset,
     handleSubmit,
     watch,
     setValue,
@@ -65,11 +86,15 @@ export const CreateEventCategoryModal = ({ children }: PropsWithChildren) => {
   const color = watch("color")
   const selectedEmoji = watch("emoji")
 
-  const onSubmit = (data: EventCategoryForm) => {}
+  const onSubmit = (data: EventCategoryForm) => {
+    createEventCategory(data)
+  }
 
   return (
     <>
-      <div onClick={() => setIsOpen(true)}>{children}</div>
+      <div className={containerClassName} onClick={() => setIsOpen(true)}>
+        {children}
+      </div>
       <Modal
         className="max-w-xl p-8"
         showModal={isOpen}
@@ -92,7 +117,7 @@ export const CreateEventCategoryModal = ({ children }: PropsWithChildren) => {
                 id="name"
                 {...register("name")}
                 placeholder="e.g. user-signup"
-                className="mt-2 w-full p-[23px]"
+                className="mt-2 w-full"
               />
               {errors.name ? (
                 <p className="mt-1 text-sm text-red-500">
@@ -160,7 +185,9 @@ export const CreateEventCategoryModal = ({ children }: PropsWithChildren) => {
             >
               Cancel
             </Button>
-            <Button type="submit">Create category</Button>
+            <Button disabled={createCategoryPending} type="submit">
+              {createCategoryPending ? "Creating..." : "Create category"}
+            </Button>
           </div>
         </form>
       </Modal>

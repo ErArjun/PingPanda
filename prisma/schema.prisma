@@ -26,8 +26,8 @@ model User {
   discordId       String?
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-  eventCategories EventCategory[]
-  Event           Event[]
+  EventCategories EventCategory[]
+  events          Event[]
   Quota           Quota[]
 
   @@index([email, apiKey])
@@ -44,7 +44,7 @@ model EventCategory {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Event     Event[]
+  events    Event[]
 
   @@unique([name, userId])
 }
