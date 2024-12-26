@@ -7,6 +7,8 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "",{
 
 export const createCheckoutSession = async ({userEmail,userId}:{userEmail:string,userId:string}) => {
     const session = await stripe.checkout.sessions.create({
+
+        payment_method_types:["card"],
         customer_email: userEmail,
         line_items: [
             {
