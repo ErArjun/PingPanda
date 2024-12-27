@@ -14,6 +14,7 @@ interface PageProps {
     [key: string]: string | string[] | undefined
   }
 }
+
 const Page = async ({ searchParams }: PageProps) => {
   const auth = await currentUser()
 
@@ -22,21 +23,21 @@ const Page = async ({ searchParams }: PageProps) => {
   }
 
   const user = await db.user.findUnique({
-    where: {
-      externalId: auth.id,
-    },
+    where: { externalId: auth.id },
   })
 
   if (!user) {
-    redirect("/welcome")
+    return redirect("/welcome")
   }
 
   const intent = searchParams.intent
+
   if (intent === "upgrade") {
     const session = await createCheckoutSession({
       userEmail: user.email,
       userId: user.id,
     })
+
     if (session.url) redirect(session.url)
   }
 
@@ -45,6 +46,7 @@ const Page = async ({ searchParams }: PageProps) => {
   return (
     <>
       {success ? <PaymentSuccessModal /> : null}
+
       <DashboardPage
         cta={
           <CreateEventCategoryModal>
@@ -55,7 +57,6 @@ const Page = async ({ searchParams }: PageProps) => {
           </CreateEventCategoryModal>
         }
         title="Dashboard"
-        hideBackButton
       >
         <DashboardPageContent />
       </DashboardPage>

@@ -1,4 +1,5 @@
 "use client"
+
 import { client } from "@/lib/client"
 import { useQuery } from "@tanstack/react-query"
 import { CheckIcon } from "lucide-react"
@@ -10,7 +11,7 @@ import { Modal } from "./ui/modal"
 
 export const PaymentSuccessModal = () => {
   const router = useRouter()
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(true)
 
   const { data, isPending } = useQuery({
     queryKey: ["user-plan"],
@@ -23,22 +24,24 @@ export const PaymentSuccessModal = () => {
     },
   })
 
+  const isPaymentSuccessful = data?.plan === "PRO"
+
   const handleClose = () => {
     setIsOpen(false)
     router.push("/dashboard")
   }
+  console.log(isPaymentSuccessful)
 
-  const isPayementSuccessful = data?.plan === "PRO"
   return (
     <Modal
       showModal={isOpen}
-      setShowModal={setIsOpen}
-      onClose={handleClose}
+      // setShowModal={setIsOpen}
+      // onClose={handleClose}
       className="px-6 pt-6"
-      preventDefaultClose={!isPayementSuccessful}
+      // preventDefaultClose={!isPaymentSuccessful}
     >
       <div className="flex flex-col items-center">
-        {isPending || !isPayementSuccessful ? (
+        {isPending || !isPaymentSuccessful ? (
           <div className="flex flex-col items-center justify-center h-64">
             <LoadingSpinner className="mb-4" />
             <p className="text-lg/7 font-medium text-gray-900">
@@ -50,17 +53,17 @@ export const PaymentSuccessModal = () => {
           </div>
         ) : (
           <>
-            <div className="relative aspect-video border border-gray-200 w-full overflow-hidden rounded-;g bg-gray-50">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+            <div className="relative aspect-video border border-gray-200 w-full overflow-hidden rounded-lg bg-gray-50">
               <img
                 src="/brand-asset-heart.png"
                 className="h-full w-full object-cover"
-                alt="payment-success"
+                alt="Payment success"
               />
             </div>
+
             <div className="mt-6 flex flex-col items-center gap-1 text-center">
               <p className="text-lg/7 tracking-tight font-medium text-pretty">
-                Upgrade successful! 🎊
+                Upgrade successful! 🎉
               </p>
               <p className="text-gray-600 text-sm/6 text-pretty">
                 Thank you for upgrading to Pro and supporting PingPanda. Your
