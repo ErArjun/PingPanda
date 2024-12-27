@@ -79,14 +79,12 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
       </div>
 
       <div className="flex flex-col">
-        <hr className="my-11 md:my-6 w-full h-px bg-gray-100" />
+        <hr className="my-4 md:my-6 w-full h-px bg-gray-100" />
 
         <UserButton
           showName
           appearance={{
-            elements: {
-              userButtonBox: "flex-row-reverse",
-            },
+            elements: { userButtonPopoverCard: { pointerEvents: "initial" } },
           }}
         />
       </div>
